@@ -1,0 +1,30 @@
+# Create a new DataSet on BQ: my_dataset
+
+from google.cloud import bigquery
+
+bigquery_client  = bigquery.Client() #Create a BigQuery service object
+dataset_id = 'my_dataset' 
+dataset_ref = bigquery_client.dataset(dataset_id) # Create a DatasetReference using a chosen dataset ID.
+dataset = bigquery.Dataset(dataset_ref)  # Construct a full Dataset object to send to the API.
+dataset.location = 'US' # Specify the geographic location where the new dataset will reside. Remember this should be same location as that of source data set from where we are getting data to run a query
+
+# Send the dataset to the API for creation. Raises google.api_core.exceptions.AlreadyExists if the Dataset already exists within the project.
+dataset = bigquery_client.create_dataset(dataset)  # API request
+print('Dataset {} created.'.format(dataset.dataset_id))
+
+
+#Run a query on BQ using Python:
+
+#Allowing Large Results
+DestinationTableName='table_id1'  #Enter new table name you want to give
+!bq query --allow_large_results --destination_table=project_id:my_dataset.$DestinationTableName 'SELECT * FROM [bigquery-public-data:hacker_news.comments]'
+
+#Without mentioning --allow_large_results:
+#This will work for the query where the result is not going to cross the limit mentioned in Google BQ documentation.  
+DestinationTableName='table_id2'  #Enter new table name you want to give
+!bq query destination_table=project_id:my_dataset.$DestinationTableName 'SELECT * FROM [bigquery-public-data:hacker_news.comments] LIMIT 100'
+
+
+#Output:
+#1 A new dataset on BQ with the name my_dataset
+#2 Results of the queries saved as tables in my_dataset
