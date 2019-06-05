@@ -28,3 +28,12 @@ DestinationTableName='table_id2'  #Enter new table name you want to give
 #Output:
 #1 A new dataset on BQ with the name my_dataset
 #2 Results of the queries saved as tables in my_dataset
+
+#Delete complete dataset: If dataset contains tables as well. And we want to delete dataset containing tables in one go the command is:
+!bq rm -f -r serene-boulder-203404:Temp1   # It will remove complete data set along with the tables in it
+
+#If your dataset is empty then you can use the following command as well: 
+#To use the following command make sure that you have deleted all the tables in that dataset otherwise, it will generate an error (dataset is still in use). 
+#Now remove an empty dataset using bq command from Python
+!bq rm -f dataset_id
+print("dataset deleted successfully !!!")
